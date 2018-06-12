@@ -120,20 +120,21 @@ def reduceNounNetwork(net):
 
 	usedtags = {}	
 	with open(tempnodefile, 'w') as nodefile:
-		nodefile.write('username,usertype\n')	
+		nodefile.write('id,username,usertype\n')	
 		for i in range(V):
 			nid = it.GetId()
+			id_user = net.GetStrAttrDatN(nid, 'id')
 			type = net.GetStrAttrDatN(nid, 'type')
-			username = net.GetStrAttrDatN(nid, 'id_entity')
+			username = net.GetStrAttrDatN(nid, 'content')
 			
 			if type == 'seed' or type == 'candidate':
-				nodefile.write('{},{}\n'.format(username, type))
+				nodefile.write('{},{},{}\n'.format(id_user, username, type))
 				
 				tags = snap.TIntV()
 				snap.GetNodesAtHop(net, nid, 1, tags, True)
 				
 				tags.Merge()
-				usedtags[username] = tags
+				usedtags[id_user] = tags
 			it.Next()
 			
 	with open(tempedgefile, 'w') as edgefile:
@@ -153,7 +154,7 @@ def reduceNounNetwork(net):
 			if Ntags > 0:
 				edgefile.write('{},{},{}\n'.format(u0,u1,Ntags))
 	
-def buildReducedNet(noun = False):
+def buildReducedNet():
 	context = snap.TTableContext()
 
 	#define schema using columns of the files
@@ -163,8 +164,7 @@ def buildReducedNet(noun = False):
 	e_schema.Add(snap.TStrTAttrPr("weight", snap.atInt))
 
 	n_schema = snap.Schema()
-	if not noun:
-		n_schema.Add(snap.TStrTAttrPr("id", snap.atStr))
+	n_schema.Add(snap.TStrTAttrPr("id", snap.atStr))
 	n_schema.Add(snap.TStrTAttrPr("username", snap.atStr))
 	n_schema.Add(snap.TStrTAttrPr("usertype", snap.atStr))
 
@@ -177,18 +177,13 @@ def buildReducedNet(noun = False):
 	edgeattrv.Add("weight")
 
 	nodeattrv = snap.TStrV()
-	if not noun:
-		nodeattrv.Add("id")
+	nodeattrv.Add("id")
 	nodeattrv.Add("username")
 	nodeattrv.Add("usertype")
 
 
 	#build SNAP network using the two TTable objects
-	if not noun:
-		reduced_net = snap.ToNetwork(snap.PNEANet, edgetable, "source", "target", edgeattrv, nodetable, "id", nodeattrv, snap.aaFirst)
-	else:
-		reduced_net = snap.ToNetwork(snap.PNEANet, edgetable, "source", "target", edgeattrv, nodetable, "username", nodeattrv, snap.aaFirst)
-	
+	reduced_net = snap.ToNetwork(snap.PNEANet, edgetable, "source", "target", edgeattrv, nodetable, "id", nodeattrv, snap.aaFirst)
 	
 	return reduced_net
 
@@ -241,7 +236,7 @@ elif networktype == 'noun':
 	print 'Starting |E|: {}'.format(network.GetEdges())
 
 	reduceNounNetwork(network)
-	r_net = buildReducedNet(noun = True)
+	r_net = buildReducedNet()
 	snap.SaveEdgeListNet(r_net, outpath+'noun_network_reduced.csv', 'Reduced Noun Network - {}'.format(domain))
 	generateTables(outpath, outpath+'noun_network_reduced.csv', r_net, 'noun')
 	print 'Time needed: {} s'.format(time.time()-start)

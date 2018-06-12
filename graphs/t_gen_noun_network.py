@@ -30,39 +30,49 @@ edgefile = '../../temp/noungraph_edges.csv'
 
 # read edges to extract distinct nodes
 # id_entity is the word or the username
-nodes = pd.DataFrame(columns=['id_entity','type'])
-edges = pd.DataFrame(columns=['screen_name','word','frequency'])
+nodes = pd.DataFrame(columns=['id','content','type'])
+users = pd.DataFrame(columns=['id','content','type'])
+words = pd.DataFrame(columns=['id','content','type'])
+edges = pd.DataFrame(columns=['id_user','word','frequency'])
 for p in datapath:
 	e = pd.read_csv(p+domain+'/noun.csv')
+	metadata = pd.read_csv(p+domain+'/user.csv', sep='\t')
+	data = e.merge(metadata, on='screen_name')
 	
 	if p == 'data-candidate/':
-		n1 = e[['screen_name']]
+		n1 = data[['id_user', 'screen_name']]
 		n1['type'] = 'candidate'
-		n1.columns = ['id_entity', 'type']
+		n1.columns = ['id', 'content','type']
 	elif p == 'data-seed/':
-		n1 = e[['screen_name']]
+		n1 = data[['id_user', 'screen_name']]
 		n1['type'] = 'seed'
-		n1.columns = ['id_entity', 'type']
+		n1.columns = ['id', 'content','type']
 		
-	n2 = e[['word']]
+	n2 = data[['word']]
 	n2['type'] = 'noun'
-	n2.columns = [ 'id_entity', 'type']
+	n2.columns = ['id', 'type']
+	n2['content'] = n2.apply(lambda x: x['id'], axis=1)
 	
-	nodes = pd.concat([nodes, n1, n2])
-	edges = pd.concat([edges, e])
-	
-nodes.drop_duplicates(inplace=True)
+	users = pd.concat([users, n1])
+	words = pd.concat([words, n2])
+	edges = pd.concat([edges, data[['id_user','word','frequency']]])
+
+users.drop_duplicates(subset='id', inplace=True)
+words.drop_duplicates(inplace=True)
+
+nodes = pd.concat([users, words])
 nodes.to_csv(nodefile, index=None)
 edges.to_csv(edgefile, index=None)
 
 ## NETWORK CONSTRUCTION ##
 e_schema = snap.Schema()
-e_schema.Add(snap.TStrTAttrPr("screen_name", snap.atStr))
+e_schema.Add(snap.TStrTAttrPr("id_user", snap.atStr))
 e_schema.Add(snap.TStrTAttrPr("word", snap.atStr))
 e_schema.Add(snap.TStrTAttrPr("frequency", snap.atInt)) 
 
 n_schema = snap.Schema()
-n_schema.Add(snap.TStrTAttrPr("id_entity", snap.atStr))
+n_schema.Add(snap.TStrTAttrPr("content", snap.atStr))
+n_schema.Add(snap.TStrTAttrPr("id", snap.atStr))
 n_schema.Add(snap.TStrTAttrPr("type", snap.atStr))
 
 #define TTable objects of edges and nodes
@@ -75,11 +85,13 @@ edgeattrv = snap.TStrV()
 edgeattrv.Add("frequency")
 
 nodeattrv = snap.TStrV()
+nodeattrv.Add("id")
+nodeattrv.Add("content")
 nodeattrv.Add("type")
-nodeattrv.Add("id_entity")
+
 
 #build SNAP network using the two TTable objects
-net = snap.ToNetwork(snap.PNEANet, edgetable, "screen_name", "word", edgeattrv, nodetable, "id_entity", nodeattrv, snap.aaFirst)
+net = snap.ToNetwork(snap.PNEANet, edgetable, "id_user", "word", edgeattrv, nodetable, "id", nodeattrv, snap.aaFirst)
 print '|V| = {}'.format(net.GetNodes())
 print '|E| = {}'.format(net.GetEdges()) 
 print 'Connected network: {}'.format(snap.IsConnected(net))
