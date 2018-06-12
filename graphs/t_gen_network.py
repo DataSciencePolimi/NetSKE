@@ -22,7 +22,7 @@ def generateTables(targetpath, netfile, net):
 
 datapath = ['data-seed/','data-candidates/']
 domain = 'finance' 
-outpath = '10-seed/{}/'.format(domain)
+outpath = '{}/'.format(domain)
 
 corenodes = pd.DataFrame()
 coreedges = pd.DataFrame()

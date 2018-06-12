@@ -72,7 +72,7 @@ def buildSubNetwork(net, networktype):
 	return subnetwork
 
 domain = 'finance'
-path = '10-seed/{}/'.format(domain)
+path = '{}/'.format(domain)
 
 fin = snap.TFIn(path+'c_network.bin')	
 network = snap.TNEANet.Load(fin)
