@@ -1,5 +1,6 @@
 import pandas as pd
 import snap
+import sys
 
 def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
@@ -20,9 +21,16 @@ def generateTables(targetpath, netfile, net):
 			edges_file.write(line)
 		line_num = line_num + 1
 
-datapath = ['data-seed/','data-candidates/']
+testtype = sys.argv[1] #can be random or mention
+#domain = sys.argv[2] # can be finance,?,?
+
+if testtype == 'random':
+	datapath = ['data-seed/','data-random/']
+elif testtype == 'mention':
+	datapath = ['data-seed/','data-candidate/']
+	
 domain = 'finance' 
-outpath = '{}/'.format(domain)
+outpath = '{}/{}-test/'.format(domain, testtype)
 
 corenodes = pd.DataFrame()
 coreedges = pd.DataFrame()
@@ -32,26 +40,35 @@ mentionnetedges = pd.DataFrame()
 ## USER DATA ##
 users = pd.DataFrame()
 for p in datapath:
-	u = pd.read_csv(p+domain+'/user.csv', sep='\t')
+	
 	if p == 'data-candidates/':
+		u = pd.read_csv(p+domain+'/user.csv', sep='\t')
 		u['type'] = 'candidate'
+		
 	elif p == 'data-seed/':
+		u = pd.read_csv(p+domain+'/user.csv', sep='\t')
 		u['type'] = 'seed'
+		
+	elif p == 'data-random/':
+		u = pd.read_csv(p+'/user.csv', sep='\t')
+		u['type'] = 'user'
 	users = pd.concat([users, u])
 	
 userNodes = users[['id_user', 'screen_name', 'type']]
 userNodes.columns = ['id', 'content', 'type']
 corenodes = pd.concat([corenodes, userNodes])
-print corenodes
 
 ## POST DATA ##
 postdata = pd.DataFrame()
 for p in datapath:
-	post = pd.read_csv(p+domain+'/tweet.csv', sep='\t', quoting=3)
+	if p == 'data-random/':
+		post = pd.read_csv(p+'/tweet.csv', sep='\t', quoting=3)[['id_tweet','id_user', 'lang']]
+	else:
+		post = pd.read_csv(p+domain+'/tweet.csv', sep='\t', quoting=3)[['id_tweet','id_user', 'lang']]
 	postdata = pd.concat([postdata, post])
 	
-postdata = postdata[['id_tweet','id_user', 'create_at']]
-postnodes = postdata[['id_tweet', 'create_at']]
+postdata.drop_duplicates(subset='id_tweet', inplace=True)
+postnodes = postdata[['id_tweet', 'lang']]
 postnodes.columns = ['id', 'content']
 postnodes['type'] = 'tweet'
 corenodes = pd.concat([corenodes, postnodes])
@@ -66,8 +83,11 @@ print '|E_post|: {}'.format(postedges.shape[0])
 
 ## TAG DATA ##
 tagdata = pd.DataFrame()
-for p in datapath:	
-	t = pd.read_csv(p+domain+'/tag.csv', sep='\t')
+for p in datapath:
+	if p == 'data-random/':
+		t = pd.read_csv(p+'/tag.csv', sep='\t')
+	else:
+		t = pd.read_csv(p+domain+'/tag.csv', sep='\t')
 	tagdata = pd.concat([tagdata, t])
 
 tagnodes = tagdata[['tag']].drop_duplicates()
@@ -87,7 +107,10 @@ print '|E_tag|: {}'.format(tagedges.shape[0])
 ## MENTION DATA ##
 mentiondata = pd.DataFrame()
 for p in datapath:
-	m = pd.read_csv(p+domain+'/mention.csv', sep='\t')
+	if p == 'data-random/':
+		m = pd.read_csv(p+'/mention.csv', sep='\t')
+	else:
+		m = pd.read_csv(p+domain+'/mention.csv', sep='\t')
 	mentiondata = pd.concat([mentiondata, m])
 		
 mentionnodes = mentiondata[['id_user', 'screen_name']].drop_duplicates()

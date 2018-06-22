@@ -188,10 +188,11 @@ def buildReducedNet():
 	return reduced_net
 
 networktype = sys.argv[1]
-	
+testtype = sys.argv[2]
+
 domain = 'finance'
-outpath = '{}/'.format(domain)
-temppath = '../../temp/'
+outpath = '{}/{}-test/'.format(domain, testtype)
+temppath = 'temp/'
 
 tempedgefile = temppath+'reduced_edges.csv'
 tempnodefile = temppath+'reduced_nodes.csv'

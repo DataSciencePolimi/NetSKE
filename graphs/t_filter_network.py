@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import snap
+
+import sys
 			
 def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
@@ -71,8 +73,10 @@ def buildSubNetwork(net, networktype):
 	
 	return subnetwork
 
-domain = 'finance'
-path = '{}/'.format(domain)
+testtype = sys.argv[1] #can be random or mention
+#domain = sys.argv[2] # can be finance,?,?
+domain = 'finance' 
+path = '{}/{}-test/'.format(domain, testtype)
 
 fin = snap.TFIn(path+'c_network.bin')	
 network = snap.TNEANet.Load(fin)
