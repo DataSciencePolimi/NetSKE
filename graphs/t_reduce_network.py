@@ -26,6 +26,7 @@ def generateTables(targetpath, netfile, net, type):
 	nodes_file.write('id\tid_user\tusername\tusertype\n')
 	edges_file = open(targetpath+type+'_reduced_edges.csv', 'w')
 	edges_file.write('source\ttarget\tweight\n')
+	edgelist_file = open(targetpath+type+'_network_reduced.edgelist', 'w')
 	
 	n_nodes = net.GetNodes()
 	n_edges = net.GetEdges()
@@ -36,6 +37,7 @@ def generateTables(targetpath, netfile, net, type):
 			nodes_file.write(line)
 		elif line_num >= (n_nodes+6) and line_num < (n_nodes+6+n_edges): #skip #END
 			edges_file.write(line)
+			edgelist_file.write(line)
 		line_num = line_num + 1
 
 # generate temporary files for hashtag network		

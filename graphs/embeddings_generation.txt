@@ -1,0 +1,14 @@
+#hashtags
+./snap/examples/node2vec/node2vec -i:h_network_reduced.edgelist -o:user_features_roles.emb -d:4 -p:1 -q:2 -k:30 -l:20 -w -v
+
+./snap/examples/node2vec/node2vec -i:h_network_reduced.edgelist -o:user_features_community.emb -d:4 -p:1 -q:0.5 -k:30 -l:20 -w -v
+
+
+#mentions
+./snap/examples/node2vec/node2vec -i:m_network_reduced.edgelist -o:user_features_roles_m.emb -d:4 -p:1 -q:2 -k:30 -l:20 -w -dr -v
+
+./snap/examples/node2vec/node2vec -i:m_network_reduced.edgelist -o:user_features_community_m.emb -d:4 -p:1 -q:0.5 -k:15 -l:30 -w -v
+
+#complete
+
+./snap/examples/node2vec/node2vec -i:network_1_seed.edgelist -o:user_features.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v

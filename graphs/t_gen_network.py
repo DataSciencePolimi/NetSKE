@@ -2,6 +2,8 @@ import pandas as pd
 import snap
 import sys
 
+## NB: ID_NODE == USERNAME because id_user == id_tweet is a thing!!!
+
 def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
 	net_file = open(targetpath+netfile+'.csv', 'r') 
@@ -55,16 +57,16 @@ for p in datapath:
 	users = pd.concat([users, u])
 	
 userNodes = users[['id_user', 'screen_name', 'type']]
-userNodes.columns = ['id', 'content', 'type']
+userNodes.columns = ['content', 'id', 'type']
 corenodes = pd.concat([corenodes, userNodes])
 
 ## POST DATA ##
 postdata = pd.DataFrame()
 for p in datapath:
 	if p == 'data-random/':
-		post = pd.read_csv(p+'/tweet.csv', sep='\t', quoting=3)[['id_tweet','id_user', 'lang']]
+		post = pd.read_csv(p+'/tweet.csv', sep='\t', quoting=3)[['id_tweet','screen_name', 'lang']]
 	else:
-		post = pd.read_csv(p+domain+'/tweet.csv', sep='\t', quoting=3)[['id_tweet','id_user', 'lang']]
+		post = pd.read_csv(p+domain+'/tweet.csv', sep='\t', quoting=3)[['id_tweet','screen_name', 'lang']]
 	postdata = pd.concat([postdata, post])
 	
 postdata.drop_duplicates(subset='id_tweet', inplace=True)
@@ -75,7 +77,7 @@ corenodes = pd.concat([corenodes, postnodes])
 print '|V_post|: {}'.format(postnodes.shape[0])
 
 #add post-user relationship
-postedges = postdata[['id_tweet','id_user']]
+postedges = postdata[['id_tweet','screen_name']]
 postedges.columns = ['target', 'source']
 postedges['e_type'] = 'tweet'
 coreedges = pd.concat([coreedges, postedges])
@@ -114,7 +116,7 @@ for p in datapath:
 	mentiondata = pd.concat([mentiondata, m])
 		
 mentionnodes = mentiondata[['id_user', 'screen_name']].drop_duplicates()
-mentionnodes.columns = ['id', 'content']
+mentionnodes.columns = ['content', 'id']
 mentionnodes['type'] = 'user'
 		
 mentionnetnodes = pd.concat([corenodes, mentionnodes])
@@ -123,7 +125,7 @@ mentionnetnodes = mentionnetnodes.drop_duplicates(subset='id')
 print '|V_mentioned|: {}'.format(mentionnodes.shape[0])
 
 #add mention relationship
-mentionedges = mentiondata[['id_tweet', 'id_user']]
+mentionedges = mentiondata[['id_tweet', 'screen_name']]
 mentionedges.columns = ['source','target']
 mentionedges['e_type'] = 'mention'
 mentionnetedges = pd.concat([coreedges, mentionedges])
@@ -144,8 +146,8 @@ e_schema.Add(snap.TStrTAttrPr("source", snap.atStr))
 e_schema.Add(snap.TStrTAttrPr("target", snap.atStr)) 
 
 n_schema = snap.Schema()
-n_schema.Add(snap.TStrTAttrPr("id", snap.atStr))
 n_schema.Add(snap.TStrTAttrPr("content", snap.atStr))
+n_schema.Add(snap.TStrTAttrPr("id", snap.atStr))
 n_schema.Add(snap.TStrTAttrPr("type", snap.atStr))
 
 #define TTable objects of edges and nodes
