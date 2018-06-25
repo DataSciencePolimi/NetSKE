@@ -14,5 +14,8 @@
 #complete
 ../snap/examples/node2vec/node2vec -i:c_network.edgelist -o:user_features_c.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v
 
-#nouns
-../snap/examples/node2vec/node2vec -i:noun_network_reduced.edgelist -o:user_features_community_noun.emb -d:4 -p:1 -q:2 -k:30 -l:20 -w -v
+#words reduced
+../snap/examples/node2vec/node2vec -i:word_network_reduced.edgelist -o:user_features_community_w.emb -d:4 -p:1 -q:2 -k:30 -l:20 -w -v
+
+#words complete
+../snap/examples/node2vec/node2vec -i:w_network.edgelist -o:user_features_w.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v;
