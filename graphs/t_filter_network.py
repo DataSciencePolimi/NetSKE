@@ -8,7 +8,7 @@ def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
 	net_file = open(targetpath+netfile+'.csv', 'r') 
 	nodes_file = open(targetpath+netfile+'_nodes.csv', 'w')
-	nodes_file.write('id\tcontent\ttype\n')
+	nodes_file.write('id\tcontent\ttype\tid_node\n')
 	edges_file = open(targetpath+netfile+'_edges.csv', 'w')
 	edges_file.write('source\ttarget\ttype\n')
 	
@@ -74,8 +74,8 @@ def buildSubNetwork(net, networktype):
 	return subnetwork
 
 testtype = sys.argv[1] #can be random or mention
-#domain = sys.argv[2] # can be finance,?,?
-domain = 'finance' 
+domain = sys.argv[2] # can be finance,finance_20,?
+
 path = '{}/{}-test/'.format(domain, testtype)
 
 fin = snap.TFIn(path+'c_network.bin')	
@@ -85,11 +85,20 @@ network = snap.TNEANet.Load(fin)
 h_net = buildSubNetwork(network, 'tag')
 rebuildContent(network, h_net)
 
-fOut = snap.TFOut(path+'h_network.bin')
+networkname = 'h_network'
+fOut = snap.TFOut(path+networkname+'.bin')
 h_net.Save(fOut)
 fOut.Flush()
 
+# use complete network of hashtags because it gives the best results
+snap.SaveEdgeListNet(h_net, path+networkname+'.csv', 'Complete Hashtags Network - {} domain'.format(domain))
+generateTables(path, networkname, h_net)
+
+#save network for node2vec input
+snap.SaveEdgeList(h_net, path+networkname+'.edgelist')
+
 ## BUILD MENTION NETWORK ##
+# generate also mention network, even if not used
 m_net = buildSubNetwork(network, 'mention')
 rebuildContent(network, m_net)
 

@@ -13,10 +13,10 @@ def filterString(string):
 
 domain = sys.argv[1]	
 path = 'data-seed/{}/'.format(domain)
-with open(os.listdir(path)[0], 'r') as seedfile:
+with open(path+os.listdir(path)[0], 'r') as seedfile:
     seed = json.load(seedfile)
 	
-tweet_header = 'id_tweet\tid_user\tscreen_name\tlang\tfavourite_count\tcreate_at\tretweet_count\ttext\n'
+tweet_header = 'id_tweet\tid_user\tscreen_name\tlang\tfavourite_count\tretweet_count\ttext\n'
 mention_header = 'id_tweet\tid_user\tscreen_name\n'
 hashtag_header = 'id_tweet\ttag\n'
 user_header = 'id_user\tscreen_name\n'
@@ -28,18 +28,19 @@ with open(path+'user.csv', 'w') as userfile:
                 mentionfile.write(mention_header)
                 tagfile.write(hashtag_header)
                 userfile.write(user_header)
-                for user in candidates:
-                    for tweet in candidates[user]:
+                for user in seed:
+                    for id_tweet in seed[user]:
                         #  tweet data
-                        id_tweet = tweet['_id']
+                        tweet = seed[user][id_tweet]
+
                         id_user = tweet['id_user']
                         screen_name = tweet['screen_name'].lower()
                         lang = tweet['lang']
                         fav_count = tweet['favourite_count']
-                        timestamp = tweet['create_at']
+                        #timestamp = tweet['create_at']
                         rt_count = tweet['retweet_count']
                         text = filterString(tweet['text']).encode('utf-8')
-                        tweetrow = '{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(id_tweet,id_user,screen_name,lang,fav_count,timestamp,rt_count,text)
+                        tweetrow = '{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(id_tweet,id_user,screen_name,lang,fav_count,rt_count,text)
                         tweetfile.write(tweetrow)
                         
                         # hashtag data

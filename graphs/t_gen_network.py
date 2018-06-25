@@ -24,14 +24,13 @@ def generateTables(targetpath, netfile, net):
 		line_num = line_num + 1
 
 testtype = sys.argv[1] #can be random or mention
-#domain = sys.argv[2] # can be finance,?,?
+domain = sys.argv[2] # can be finance, finance_20,...
 
 if testtype == 'random':
 	datapath = ['data-seed/','data-random/']
 elif testtype == 'mention':
 	datapath = ['data-seed/','data-candidate/']
-	
-domain = 'finance' 
+	 
 outpath = '{}/{}-test/'.format(domain, testtype)
 
 corenodes = pd.DataFrame()

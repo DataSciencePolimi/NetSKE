@@ -23,7 +23,7 @@ def generateTables(targetpath, netfile, net, type):
 	#split file into node and edge file
 	net_file = open(netfile, 'r') 
 	nodes_file = open(targetpath+type+'_reduced_nodes.csv', 'w')
-	nodes_file.write('id\tid_user\tusername\tusertype\n')
+	nodes_file.write('id\tusername\tid_user\tusertype\n')
 	edges_file = open(targetpath+type+'_reduced_edges.csv', 'w')
 	edges_file.write('source\ttarget\tweight\n')
 	edgelist_file = open(targetpath+type+'_network_reduced.edgelist', 'w')
@@ -191,8 +191,8 @@ def buildReducedNet():
 
 networktype = sys.argv[1]
 testtype = sys.argv[2]
+domain = sys.argv[3]
 
-domain = 'finance'
 outpath = '{}/{}-test/'.format(domain, testtype)
 temppath = 'temp/'
 
