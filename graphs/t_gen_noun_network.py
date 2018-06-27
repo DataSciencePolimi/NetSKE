@@ -5,7 +5,7 @@ def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
 	net_file = open(targetpath+netfile+'.csv', 'r') 
 	nodes_file = open(targetpath+netfile+'_nodes.csv', 'w')
-	nodes_file.write('id\ttype\tid_node\n')
+	nodes_file.write('id\tid_node\tcontent\ttype\n')
 	edges_file = open(targetpath+netfile+'_edges.csv', 'w')
 	edges_file.write('source\ttarget\tfrequency\n')
 	
@@ -21,12 +21,12 @@ def generateTables(targetpath, netfile, net):
 		line_num = line_num + 1
 		
 
-datapath = ['data-seed/','data-candidate/']
-domain = 'finance' 
+datapath = ['data-seed/','data-random/']
+domain = 'finance_20' 
 outpath = '{}/'.format(domain)
 
-nodefile = '../../temp/noungraph_nodes.csv'
-edgefile = '../../temp/noungraph_edges.csv'
+nodefile = 'temp/noungraph_nodes.csv'
+edgefile = 'temp/noungraph_edges.csv'
 
 # read edges to extract distinct nodes
 # id_entity is the word or the username
@@ -35,8 +35,14 @@ users = pd.DataFrame(columns=['id','content','type'])
 words = pd.DataFrame(columns=['id','content','type'])
 edges = pd.DataFrame(columns=['id_user','word','frequency'])
 for p in datapath:
-	e = pd.read_csv(p+domain+'/noun.csv')
-	metadata = pd.read_csv(p+domain+'/user.csv', sep='\t')
+
+	if p == 'data-random/':
+		path = p
+	elif p == 'data-seed/':
+		path = p+domain+'/'
+		
+	e = pd.read_csv(path+'noun.csv', sep='\t')
+	metadata = pd.read_csv(path+'user.csv', sep='\t')
 	data = e.merge(metadata, on='screen_name')
 	
 	if p == 'data-candidate/':
@@ -46,6 +52,10 @@ for p in datapath:
 	elif p == 'data-seed/':
 		n1 = data[['id_user', 'screen_name']]
 		n1['type'] = 'seed'
+		n1.columns = ['id', 'content','type']
+	elif p == 'data-random/':
+		n1 = data[['id_user', 'screen_name']]
+		n1['type'] = 'user'
 		n1.columns = ['id', 'content','type']
 		
 	n2 = data[['word']]
@@ -61,8 +71,8 @@ users.drop_duplicates(subset='id', inplace=True)
 words.drop_duplicates(inplace=True)
 
 nodes = pd.concat([users, words])
-nodes.to_csv(nodefile, index=None)
-edges.to_csv(edgefile, index=None)
+nodes.to_csv(nodefile, index=None, sep='\t')
+edges.to_csv(edgefile, index=None, sep='\t')
 
 ## NETWORK CONSTRUCTION ##
 e_schema = snap.Schema()
@@ -77,8 +87,8 @@ n_schema.Add(snap.TStrTAttrPr("type", snap.atStr))
 
 #define TTable objects of edges and nodes
 context = snap.TTableContext()
-edgetable = snap.TTable.LoadSS(e_schema, edgefile, context, ",", snap.TBool(True))
-nodetable = snap.TTable.LoadSS(n_schema, nodefile, context, ",", snap.TBool(True))
+edgetable = snap.TTable.LoadSS(e_schema, edgefile, context, "\t", snap.TBool(True))
+nodetable = snap.TTable.LoadSS(n_schema, nodefile, context, "\t", snap.TBool(True))
 
 #define (if any) attribute names using SNAP string vectors
 edgeattrv = snap.TStrV()

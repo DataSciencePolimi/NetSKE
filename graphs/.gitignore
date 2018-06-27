@@ -1,6 +1,7 @@
 data-seed
 data-candidate
 data-random
+data-noun
 temp
 *.bin
 *.edgelist
