@@ -11,13 +11,13 @@ if domain == 'random':
 	path = 'data-random/'
 else:
 	path = 'data-seed/{}/'.format(domain)
-
+	
+header = 'screen_name\tword\tfrequency\n'
 nounfilenames = [f for f in os.listdir(path) if 'NOUN' in f]
-print nounfilenames
 
 with open(path+'noun.csv', 'w') as output:
-	output.write('screen_name\tword\tfrequency\n')
-	for f in nounfilenames:	
+	output.write(header)
+	for f in nounfilenames:
 		with open(path+f, 'r') as nounfile:
 			data = json.load(nounfile)
 			

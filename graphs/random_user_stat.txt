@@ -1,0 +1,70 @@
+Test Data - 10
+Seeds: 192
+Tweets: 10162
+Hashtags: 4102
+Unique Hashtags: 1691
+Mentions: 6296
+Unique Mentions: 2991
+Test Data - 1
+Seeds: 192
+Tweets: 22366
+Hashtags: 6601
+Unique Hashtags: 3105
+Mentions: 14439
+Unique Mentions: 6879
+Test Data - 2
+Seeds: 411
+Tweets: 35072
+Hashtags: 10050
+Unique Hashtags: 4620
+Mentions: 22529
+Unique Mentions: 9931
+Test Data - 3
+Seeds: 636
+Tweets: 46863
+Hashtags: 12473
+Unique Hashtags: 5636
+Mentions: 29928
+Unique Mentions: 12429
+Test Data - 4
+Seeds: 860
+Tweets: 59636
+Hashtags: 16057
+Unique Hashtags: 6874
+Mentions: 37882
+Unique Mentions: 14783
+Test Data - 5
+Seeds: 1069
+Tweets: 68877
+Hashtags: 18520
+Unique Hashtags: 7941
+Mentions: 43156
+Unique Mentions: 17072
+Test Data - 6
+Seeds: 1286
+Tweets: 82262
+Hashtags: 21807
+Unique Hashtags: 8982
+Mentions: 51267
+Unique Mentions: 19361
+Test Data - 7
+Seeds: 1484
+Tweets: 91482
+Hashtags: 24216
+Unique Hashtags: 9742
+Mentions: 58586
+Unique Mentions: 21815
+Test Data - 8
+Seeds: 1681
+Tweets: 100533
+Hashtags: 27675
+Unique Hashtags: 11230
+Mentions: 63926
+Unique Mentions: 24052
+Test Data - 9
+Seeds: 1879
+Tweets: 110070
+Hashtags: 30634
+Unique Hashtags: 12692
+Mentions: 69888
+Unique Mentions: 26504

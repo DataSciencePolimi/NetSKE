@@ -1,6 +1,8 @@
 import snap
 import pandas as pd
 
+import sys
+
 def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
 	net_file = open(targetpath+netfile+'.csv', 'r') 
@@ -23,7 +25,8 @@ def generateTables(targetpath, netfile, net):
 
 datapath = ['data-seed/','data-random/']
 domain = 'finance_20' 
-outpath = '{}/'.format(domain)
+outpath = '{}/random-test/test-network-features/'.format(domain)
+i = int(sys.argv[1]) # test number
 
 nodefile = 'temp/noungraph_nodes.csv'
 edgefile = 'temp/noungraph_edges.csv'
@@ -38,11 +41,14 @@ for p in datapath:
 
 	if p == 'data-random/':
 		path = p
+		e = pd.read_csv(path+'noun.csv', sep='\t')
+		metadata = pd.read_csv(path+'user.csv', sep='\t')
+		metadata = metadata[metadata['n_test'] == i]
 	elif p == 'data-seed/':
 		path = p+domain+'/'
+		e = pd.read_csv(path+'noun.csv', sep='\t')
+		metadata = pd.read_csv(path+'user.csv', sep='\t')
 		
-	e = pd.read_csv(path+'noun.csv', sep='\t')
-	metadata = pd.read_csv(path+'user.csv', sep='\t')
 	data = e.merge(metadata, on='screen_name')
 	
 	if p == 'data-candidate/':
@@ -106,7 +112,7 @@ print '|V| = {}'.format(net.GetNodes())
 print '|E| = {}'.format(net.GetEdges()) 
 print 'Connected network: {}'.format(snap.IsConnected(net))
 
-networkname = 'noun_network'
+networkname = 'noun_network_'+str(i)
 
 #save network for metadata and visualization
 snap.SaveEdgeListNet(net, outpath+networkname+'.csv', 'Noun Network - {} domain'.format(domain))
@@ -116,6 +122,6 @@ generateTables(outpath, networkname, net)
 #snap.SaveEdgeList(net, outpath+networkname+'.edgelist')
 
 #save network for relaoding and manipulation
-fOut = snap.TFOut(outpath+networkname+'.bin')
-net.Save(fOut)
-fOut.Flush()
+#fOut = snap.TFOut(outpath+networkname+'.bin')
+#net.Save(fOut)
+#fOut.Flush()
