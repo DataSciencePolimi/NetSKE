@@ -5,3 +5,6 @@ data-noun
 temp
 *.bin
 *.edgelist
+!user.csv
+!follower.csv
+!follower_data.csv
