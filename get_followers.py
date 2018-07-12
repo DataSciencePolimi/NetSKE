@@ -1,6 +1,8 @@
 import tweepy
 import csv
+import json
 import pandas as pd
+import time
 
 #login
 path_credentials = '../credentials.json' #complete path of twitter credentials
@@ -18,7 +20,7 @@ def limit_handled(cursor):
         try:
             yield cursor.next()
         except tweepy.RateLimitError:
-			print 'API Rate Limit exceeded. Waiting...'
+	    print 'API Rate Limit exceeded. Waiting...'
             time.sleep(15 * 60)
 
 # login to API			
@@ -37,6 +39,7 @@ writer2 = csv.writer(ofile2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MIN
 writer2.write(['id_follower','id_followed'])
 
 allusers = list(pd.read_csv(path+'user.csv')['id_user'])
+start = time.time()
 for id_seed in seed_list:
 	print 'Followers of '+str(id_seed)
 	for follower in limit_handled(tweepy.Cursor(twitterAPI.followers, user_id=id_seed).items()):
@@ -48,4 +51,7 @@ for id_seed in seed_list:
 			
 		# store follow relationship
 		writer2.writerow([follower.id, id_seed])
+	print 'Time needed: {} s'.format(time.time()-start)
+
+print 'Overall time needed: {} min'.format((time.time()-start)/60)
 	
