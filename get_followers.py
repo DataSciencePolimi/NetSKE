@@ -46,11 +46,6 @@ else:
 	userlist = list(alltestusers[alltestusers['n_test'] == n_test]['id_user'][:56].unique())
 	ofile2 = open(path+'follower_{}.csv'.format(n_test), 'a')
 
-
-#ofile = open(path+'follower_data.csv', 'w')
-#writer = csv.writer(ofile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-#writer.writerow(['id_user','screen_name','followers','following','lang','location','created_at','link_img'])
-
 writer2 = csv.writer(ofile2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 writer2.writerow(['id_follower','id_followed'])
 
