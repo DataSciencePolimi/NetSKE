@@ -6,3 +6,5 @@ temp
 *.bin
 *.edgelist
 **/followers*.csv
+**/social*.csv
+**/social*.edgelist
