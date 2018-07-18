@@ -6,9 +6,9 @@ def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
 	net_file = open(targetpath+netfile+'.csv', 'r') 
 	nodes_file = open(targetpath+netfile+'_nodes.csv', 'w')
-	nodes_file.write('id\tcontent\ttype\tid_node\n')
+	nodes_file.write('id\tfollowers\tfollowing\tid_user\n')
 	edges_file = open(targetpath+netfile+'_edges.csv', 'w')
-	edges_file.write('source\ttarget\ttype\n')
+	edges_file.write('source\ttarget\n')
 	
 	n_nodes = net.GetNodes()
 	n_edges = net.GetEdges()
@@ -23,6 +23,7 @@ def generateTables(targetpath, netfile, net):
 
 testtype = sys.argv[1] #can be random or mention
 domain = sys.argv[2] # can be finance, finance_20,...
+relationship = sys.argv[3] # follower/following
 
 path = '{}/{}-test/'.format(domain, testtype)
 
@@ -30,10 +31,10 @@ nodefile = 'temp/nodes.csv'
 edgefile = 'temp/edges.csv'
 
 # merge followers of seeds and test 1
-seed_followers_nodes = pd.read_csv(path+'followers_network_nodes.csv')
-seed_followers_edges = pd.read_csv(path+'followers_network_edges.csv')
-test_followers_nodes = pd.read_csv(path+'test-network-features/followers_network_nodes.csv')
-test_followers_edges = pd.read_csv(path+'test-network-features/followers_network_edges.csv')
+seed_followers_nodes = pd.read_csv(path+relationship+'_network_nodes.csv')
+seed_followers_edges = pd.read_csv(path+relationship+'_network_edges.csv')
+test_followers_nodes = pd.read_csv(path+'test-network-features/{}_network_nodes_1.csv'.format(relationship))
+test_followers_edges = pd.read_csv(path+'test-network-features/{}_network_edges_1.csv'.format(relationship))
 
 allnodes = pd.concat([seed_followers_nodes, test_followers_nodes])
 allnodes.drop_duplicates(inplace=True)
@@ -73,11 +74,11 @@ print '|V| = {}'.format(net.GetNodes())
 print '|E| = {}'.format(net.GetEdges()) 
 print 'Connected network: {}'.format(snap.IsConnected(net))
 
-networkname = 'social_network_1'
+networkname = 'social_network_1_'+relationship
 outpath = path+'test-network-features/'
 
 #save network for metadata and visualization
-snap.SaveEdgeListNet(net, outpath+networkname+'.csv', 'Social Network using followers')
+snap.SaveEdgeListNet(net, outpath+networkname+'.csv', 'Social Network using '+relationship)
 generateTables(outpath, networkname, net)
 
 #save network for node2vec input
