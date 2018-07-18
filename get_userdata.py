@@ -32,6 +32,7 @@ def limit_handled(cursor):
 twitterAPI = login()
 
 # select source to gather followers
+'''
 source = sys.argv[1] # it can be seed or a number (test number)
 domain = 'finance_20'
 
@@ -45,6 +46,9 @@ else:
 	alltestusers = pd.read_csv(path+'user.csv', sep='\t')
 	userlist = list(alltestusers[alltestusers['n_test'] == n_test]['id_user'].unique())
 	ofile = open(path+'user_data_{}.csv'.format(n_test), 'w')
+'''
+ofile = open('graphs/finance_20/random-test/test-network-features/top_followed_data.csv', 'w')
+userlist = list(pd.read_csv('graphs/finance_20/random-test/test-network-features/top_followed.csv')['id_user'])
 	
 writer = csv.writer(ofile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 writer.writerow(['id_user','screen_name','followers','following','lang','location','created_at','link_img'])
