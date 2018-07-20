@@ -26,8 +26,7 @@ tweet_header = 'id_tweet\tid_user\tscreen_name\tlang\tfavourite_count\tretweet_c
 mention_header = 'id_tweet\tid_user\tscreen_name\n'
 hashtag_header = 'id_tweet\ttag\n'
 
-start = True
-
+it = 0
 with open(path+'user.csv', 'a') as userfile:
 	with open(path+'tweet.csv', 'a') as tweetfile:
 		with open(path+'mention.csv', 'a') as mentionfile:
@@ -41,7 +40,7 @@ with open(path+'user.csv', 'a') as userfile:
 						n_test = f.split('_')[2]
 						print 'Test Data - {}'.format(n_test)
 						
-					if start:
+					if it == 0:
 						tweetfile.write(tweet_header)
 						mentionfile.write(mention_header)
 						tagfile.write(hashtag_header)
@@ -83,18 +82,24 @@ with open(path+'user.csv', 'a') as userfile:
 						else:
 							userrow = '{}\t{}\n'.format(id_user,screen_name)
 						userfile.write(userrow)
-					 
-					# print statistics
-					u = pd.read_csv(path+'user.csv', sep='\t')
-					t = pd.read_csv(path+'tweet.csv', sep='\t', quoting=3)
-					m = pd.read_csv(path+'mention.csv', sep='\t')
-					h = pd.read_csv(path+'tag.csv', sep='\t')
-
-					print 'Seeds: {}'.format(u.shape[0])
-					print 'Tweets: {}'.format(t.shape[0])
-					print 'Hashtags: {}'.format(h.shape[0])
-					print 'Unique Hashtags: {}'.format(len(h['tag'].unique()))
-					print 'Mentions: {}'.format(m.shape[0])
-					print 'Unique Mentions: {}'.format(len(m['id_user'].unique()))
 					
-					start = False
+					it = it + 1
+					
+# print statistics (seeds file only)
+u = pd.read_csv(path+'user.csv', sep='\t').drop_duplicates()
+t = pd.read_csv(path+'tweet.csv', sep='\t', quoting=3).drop_duplicates()
+m = pd.read_csv(path+'mention.csv', sep='\t').drop_duplicates()
+h = pd.read_csv(path+'tag.csv', sep='\t').drop_duplicates()
+
+print 'Seeds: {}'.format(u.shape[0])
+print 'Tweets: {}'.format(t.shape[0])
+print 'Hashtags: {}'.format(h.shape[0])
+print 'Unique Hashtags: {}'.format(len(h['tag'].unique()))
+print 'Mentions: {}'.format(m.shape[0])
+print 'Unique Mentions: {}'.format(len(m['id_user'].unique()))
+
+# rewrite without duplicates (fashion has one)
+u.to_csv(path+'user.csv', sep='\t', index=None)
+t.to_csv(path+'tweet.csv', sep='\t', quoting=3, index=None)
+m.to_csv(path+'mention.csv', sep='\t', index=None)
+h.to_csv(path+'tag.csv', sep='\t', index=None)
