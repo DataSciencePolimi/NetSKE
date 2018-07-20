@@ -24,8 +24,8 @@ def limit_handled(cursor):
 		except tweepy.RateLimitError:
 			print 'API Rate Limit exceeded. Waiting...'
 			time.sleep(15 * 60)
-		except tweepy.error.TweepError:
-			print 'Connection aborted by peer. Waiting...'
+		except tweepy.error.TweepError as e:
+			print e
 			time.sleep(5 * 60)
 
 # login to API			
@@ -37,13 +37,18 @@ domain = sys.argv[2]
 
 if source == 'seed':
 	path = 'graphs/data-seed/{}/'.format(domain)
-	userlist = list(pd.read_csv(path+'user.csv', sep='\t')['id_user'])
+	userdata = pd.read_csv(path+'user.csv')[['id_user', 'protected']]
+	userlist = list(userdata[userdata['protected'] == False]['id_user'])
+
+	if userdata.shape[0] != len(userlist):
+		print 'Protected users in the list. Removed from following collection!'
+
 	ofile2 = open(path+'follower.csv', 'a')
 else:
 	n_test = int(source)
 	path = 'graphs/data-random/'
-	alltestusers = pd.read_csv(path+'user.csv', sep='\t')
-	userlist = list(alltestusers[alltestusers['n_test'] == n_test]['id_user'][:56].unique())
+	alltestusers = pd.read_csv(path+'user_data.csv', sep='\t')
+	userlist = list(alltestusers[alltestusers['n_test'] == n_test]['id_user'].unique())
 	ofile2 = open(path+'follower_{}.csv'.format(n_test), 'a')
 
 writer2 = csv.writer(ofile2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)

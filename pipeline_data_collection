@@ -1,0 +1,1 @@
+nohup sh -c "python -u get_follower.py seed chess && python -u get_follower.py seed aw && python -u get_following.py seed fashion && python -u get_follower.py seed fashion" &

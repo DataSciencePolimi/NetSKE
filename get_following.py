@@ -24,8 +24,8 @@ def limit_handled(cursor):
 		except tweepy.RateLimitError:
 			print 'API Rate Limit exceeded. Waiting...'
 			time.sleep(15 * 60)
-		except tweepy.error.TweepError:
-			print 'Connection aborted by peer. Waiting...'
+		except tweepy.error.TweepError as e:
+			print e
 			time.sleep(5 * 60)
 
 
@@ -40,7 +40,12 @@ domain = sys.argv[2]
 
 if source == 'seed':
 	path = 'graphs/data-seed/{}/'.format(domain)
-	userlist = list(pd.read_csv(path+'user.csv', sep='\t')['id_user'])
+	userdata = pd.read_csv(path+'user_data.csv')[['id_user', 'protected']]
+	userlist = list(userdata[userdata['protected'] == False]['id_user'])
+	
+	if userdata.shape[0] != len(userlist):
+		print 'Protected users in the list. Removed from following collection!'
+
 	ofile2 = open(path+'following.csv', 'w')
 else:
 	n_test = int(source)

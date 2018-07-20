@@ -51,7 +51,7 @@ userlist = list(pd.read_csv('graphs/finance_20/random-test/test-network-features
 '''
 
 writer = csv.writer(ofile, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-writer.writerow(['id_user','screen_name','followers','following','lang','location','created_at','link_img'])
+writer.writerow(['id_user','screen_name','followers','following','lang','location','created_at','link_img','protected'])
 
 processed = 0 # print percentage variable
 api_success = False
@@ -64,11 +64,11 @@ for id_user in userlist:
 		except tweepy.RateLimitError:
 			print 'API Rate Limit exceeded. Waiting...'
 			time.sleep(15 * 60)
-		except tweepy.error.TweepError:
-			print 'Connection aborted by peer. Waiting...'
+		except tweepy.error.TweepError as e:
+			print e
 			time.sleep(5 * 60)
 		
-	writer.writerow([u.id, u.screen_name.encode('utf-8'), u.followers_count, u.friends_count, u.lang, u.location.encode('utf-8'), u.created_at, u.profile_image_url])
+	writer.writerow([u.id, u.screen_name.encode('utf-8'), u.followers_count, u.friends_count, u.lang, u.location.encode('utf-8'), u.created_at, u.profile_image_url,u.protected])
 	
 	api_success = False
 	processed = processed + 1
