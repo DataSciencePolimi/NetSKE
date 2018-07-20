@@ -36,7 +36,7 @@ twitterAPI = login()
 
 # select source to gather followers
 source = sys.argv[1] # it can be seed or a number (test number)
-domain = 'finance_20'
+domain = sys.argv[2]
 
 if source == 'seed':
 	path = 'graphs/data-seed/{}/'.format(domain)
