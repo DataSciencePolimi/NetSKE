@@ -2,7 +2,8 @@ import pandas as pd
 import snap
 import sys
 
-## NB: ID_NODE == USERNAME because id_user == id_tweet is a thing!!!
+## NB: ID_NODE == USERNAME because id_user == id_tweet happens
+## but USERNAME == TAGNAME also happens!
 
 def generateTables(targetpath, netfile, net):
 	#split file into node and edge file
@@ -58,7 +59,7 @@ for p in datapath:
 userNodes = users[['id_user', 'screen_name', 'type']]
 userNodes.columns = ['content', 'id', 'type']
 corenodes = pd.concat([corenodes, userNodes])
-
+	
 ## POST DATA ##
 postdata = pd.DataFrame()
 for p in datapath:
@@ -67,7 +68,7 @@ for p in datapath:
 	else:
 		post = pd.read_csv(p+domain+'/tweet.csv', sep='\t', quoting=3)[['id_tweet','screen_name', 'lang']]
 	postdata = pd.concat([postdata, post])
-	
+
 postdata.drop_duplicates(subset='id_tweet', inplace=True)
 postnodes = postdata[['id_tweet', 'lang']]
 postnodes.columns = ['id', 'content']
@@ -92,14 +93,14 @@ for p in datapath:
 	tagdata = pd.concat([tagdata, t])
 
 tagnodes = tagdata[['tag']].drop_duplicates()
-tagnodes.columns = ['id'] # key
-tagnodes['content'] = tagnodes.apply(lambda x: x['id'], axis=1) # content same as key for hashtags
+tagnodes.columns = ['content'] # tagname
+tagnodes['id'] = ['t{}'.format(i) for i in range(tagnodes.shape[0])] # key generated to avoid duplicates with username (fashion domain)
 tagnodes['type'] = 'tag'
 tagnetnodes = pd.concat([corenodes, tagnodes])
 print '|V_tag|: {}'.format(tagnodes.shape[0])
 
 #add post-tag relationship
-tagedges = tagdata[['id_tweet', 'tag']]
+tagedges = tagdata.merge(tagnodes, left_on='tag', right_on='content')[['id_tweet','id']]
 tagedges.columns = ['source', 'target']
 tagedges['e_type'] = 'tag'
 tagnetedges = pd.concat([coreedges, tagedges])

@@ -25,7 +25,7 @@ testtype = sys.argv[1] #can be random or mention
 domain = sys.argv[2] # can be finance, finance_20,...
 relationship = sys.argv[3] # follower/following
 
-path = '{}/{}-test/'.format(domain, testtype)
+path = '{}/{}-test/test-network-features/'.format(domain, testtype)
 
 nodefile = 'temp/nodes.csv'
 edgefile = 'temp/edges.csv'
@@ -33,8 +33,8 @@ edgefile = 'temp/edges.csv'
 # merge followers of seeds and test 1
 seed_followers_nodes = pd.read_csv(path+relationship+'_network_nodes.csv')
 seed_followers_edges = pd.read_csv(path+relationship+'_network_edges.csv')
-test_followers_nodes = pd.read_csv(path+'test-network-features/{}_network_nodes_1.csv'.format(relationship))
-test_followers_edges = pd.read_csv(path+'test-network-features/{}_network_edges_1.csv'.format(relationship))
+test_followers_nodes = pd.read_csv('data-random/{}_network_nodes_1.csv'.format(relationship))
+test_followers_edges = pd.read_csv('data-random/{}_network_edges_1.csv'.format(relationship))
 
 allnodes = pd.concat([seed_followers_nodes, test_followers_nodes])
 allnodes.drop_duplicates(inplace=True)
@@ -75,17 +75,16 @@ print '|E| = {}'.format(net.GetEdges())
 print 'Connected network: {}'.format(snap.IsConnected(net))
 
 networkname = 'social_network_1_'+relationship
-outpath = path+'test-network-features/'
 
 #save network for metadata and visualization
-snap.SaveEdgeListNet(net, outpath+networkname+'.csv', 'Social Network using '+relationship)
-generateTables(outpath, networkname, net)
+snap.SaveEdgeListNet(net, path+networkname+'.csv', 'Social Network using '+relationship)
+generateTables(path, networkname, net)
 
 #save network for node2vec input
-snap.SaveEdgeList(net, outpath+networkname+'.edgelist')
+snap.SaveEdgeList(net, path+networkname+'.edgelist')
 
 #save network for relaoding and manipulation
-#fOut = snap.TFOut(outpath+networkname+'.bin')
+#fOut = snap.TFOut(path+networkname+'.bin')
 #net.Save(fOut)
 #fOut.Flush()
 
