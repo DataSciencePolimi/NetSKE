@@ -45,43 +45,45 @@ with open(path+'user.csv', 'a') as userfile:
 						mentionfile.write(mention_header)
 						tagfile.write(hashtag_header)
 						userfile.write(user_header)
-						
+					
 					for user in seed:
-						for id_tweet in seed[user]:
-							#  tweet data
-							tweet = seed[user][id_tweet]
+						# skip gucci in data extraction because it has too many followers
+						if user.lower() != 'gucci':
+							for id_tweet in seed[user]:
+								#  tweet data
+								tweet = seed[user][id_tweet]
 
-							id_user = tweet['id_user']
-							screen_name = tweet['screen_name'].lower()
-							lang = tweet['lang']
-							fav_count = tweet['favourite_count']
-							#timestamp = tweet['create_at']
-							rt_count = tweet['retweet_count']
-							text = filterString(tweet['text']).encode('utf-8')
-							tweetrow = '{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(id_tweet,id_user,screen_name,lang,fav_count,rt_count,text)
-							tweetfile.write(tweetrow)
-							
-							# hashtag data
-							p = re.compile("(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([A-Za-z]+[A-Za-z0-9]+)")
-							hashtags = p.findall(text)
-							for tag in hashtags:
-								tagrow = '{}\t{}\n'.format(id_tweet, tag.lower())
-								tagfile.write(tagrow)
+								id_user = tweet['id_user']
+								screen_name = tweet['screen_name'].lower()
+								lang = tweet['lang']
+								fav_count = tweet['favourite_count']
+								#timestamp = tweet['create_at']
+								rt_count = tweet['retweet_count']
+								text = filterString(tweet['text']).encode('utf-8')
+								tweetrow = '{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(id_tweet,id_user,screen_name,lang,fav_count,rt_count,text)
+								tweetfile.write(tweetrow)
+								
+								# hashtag data
+								p = re.compile("(?<=^|(?<=[^a-zA-Z0-9-_\.]))#([A-Za-z]+[A-Za-z0-9]+)")
+								hashtags = p.findall(text)
+								for tag in hashtags:
+									tagrow = '{}\t{}\n'.format(id_tweet, tag.lower())
+									tagfile.write(tagrow)
 
-							# mention data
-							mentions = tweet['mentions']
-							for m in mentions:
-								id_user_mentioned = m['id']
-								screen_name_mentioned = m['screen_name'].lower()
-								mentionrow = '{}\t{}\t{}\n'.format(id_tweet, id_user_mentioned, screen_name_mentioned)
-								mentionfile.write(mentionrow)
-							
-						# user data
-						if domain == 'random':
-							userrow = '{}\t{}\t{}\n'.format(id_user,screen_name, n_test)
-						else:
-							userrow = '{}\t{}\n'.format(id_user,screen_name)
-						userfile.write(userrow)
+								# mention data
+								mentions = tweet['mentions']
+								for m in mentions:
+									id_user_mentioned = m['id']
+									screen_name_mentioned = m['screen_name'].lower()
+									mentionrow = '{}\t{}\t{}\n'.format(id_tweet, id_user_mentioned, screen_name_mentioned)
+									mentionfile.write(mentionrow)
+								
+							# user data
+							if domain == 'random':
+								userrow = '{}\t{}\t{}\n'.format(id_user,screen_name, n_test)
+							else:
+								userrow = '{}\t{}\n'.format(id_user,screen_name)
+							userfile.write(userrow)
 					
 					it = it + 1
 					
