@@ -24,6 +24,10 @@ if relationship == 'follower':
 	nometadatafield = 'id_follower'
 elif relationship == 'following':
 	nometadatafield = 'id_followed'
+
+# filter users that have too many followers in test 1!
+followers = followers[~followers['id_followed'].isin([12,13])]
+userdata = userdata[~userdata['id_user'].isin([12,13])]
 	
 nometadata = followers[[nometadatafield]].drop_duplicates()
 nometadata.columns = ['id_user']

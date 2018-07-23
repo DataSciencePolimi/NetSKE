@@ -1,0 +1,11 @@
+#hashtags complete
+../../snap/examples/node2vec/node2vec -i:aw/random-test/test-network-features/h_network_1.edgelist -o:aw/random-test/test-network-features/h_network_1.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v
+
+#mentions complete
+../../snap/examples/node2vec/node2vec -i:aw/random-test/test-network-features/m_network_1.edgelist -o:aw/random-test/test-network-features/m_network_1.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v
+
+#following
+../../snap/examples/node2vec/node2vec -i:fashion/random-test/test-network-features/social_network_1_following.edgelist -o:fashion/random-test/test-network-features/social_network_1_following.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v
+
+#follower
+nohup ../../veles/examples/veles/veles -i:fashion/random-test/test-network-features/social_network_1_follower.edgelist -o:fashion/random-test/test-network-features/social_network_1_follower.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v &
