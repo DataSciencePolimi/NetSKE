@@ -37,11 +37,11 @@ domain = sys.argv[2]
 
 if source == 'seed':
 	path = 'graphs/data-seed/{}/'.format(domain)
-	userdata = pd.read_csv(path+'user.csv')[['id_user', 'protected']]
+	userdata = pd.read_csv(path+'user_data.csv')[['id_user', 'protected']]
 	userlist = list(userdata[userdata['protected'] == False]['id_user'])
 
 	if userdata.shape[0] != len(userlist):
-		print 'Protected users in the list. Removed from following collection!'
+		print 'Protected users in the list. Removed from follower collection!'
 
 	ofile2 = open(path+'follower.csv', 'a')
 else:
