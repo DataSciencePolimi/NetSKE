@@ -1,0 +1,1 @@
+../../snap/examples/node2vec/node2vec -i:"$1/random-test/test-network-features/social_network_reduced.edgelist" -o:"$1/random-test/test-network-features/social_network_reduced_weighted.emb" -d:4 -p:1 -q:0.5 -k:30 -l:20 -w -v
