@@ -155,6 +155,43 @@ def reduceNounNetwork(net):
 
 			if Ntags > 0:
 				edgefile.write('{},{},{}\n'.format(u0,u1,Ntags))
+
+# compute reduced social network for target users only               		
+def reduceSocialNetwork(net, domain):
+    test_users = list(pd.read_csv('data-random/user_data_1.csv')['id_user'])
+    seed_users = list(pd.read_csv('data-seed/' + domain + '/user.csv', sep='\t')['id_user'])
+    print seed_users
+    print test_users[:10]
+    
+	it = net.BegNI()
+	with open(tempnodefile, 'w') as nodefile:
+		with open(tempedgefile, 'w') as edgefile:
+			nodefile.write('id\n')
+			edgefile.write('source,target,weight\n')
+			
+			for i in range(net.GetNodes()):
+				nid = it.GetId()
+				sourcestringid = net.GetStrAttrDatN(nid, 'id_user')
+				
+				if sourcestringid in test_users + seed_users:
+					nodefile.write('{}\n'.format(sourcestringid))
+					users = snap.TIntV()
+					snap.GetNodesAtHop(net, nid, 2, users, False)
+					
+					for u in users:
+						stringid = net.GetStrAttrDatN(u, 'id')
+                        
+                        if stringid in test_users + seed_users:
+                            count = getLen2Paths(net, nid, u)
+                            nodefile.write('{}\n'.format(stringid))
+                            edgefile.write('{},{},{}\n'.format(sourcestringid, stringid, count))
+				it.Next()
+				
+	nodes = pd.read_csv(tempnodefile).drop_duplicates()
+	edges = pd.read_csv(tempedgefile)
+		
+	nodes.to_csv(tempnodefile, index=None)
+	edges.to_csv(tempedgefile, index=None)
 	
 def buildReducedNet():
 	context = snap.TTableContext()
@@ -167,8 +204,8 @@ def buildReducedNet():
 
 	n_schema = snap.Schema()
 	n_schema.Add(snap.TStrTAttrPr("id", snap.atStr))
-	n_schema.Add(snap.TStrTAttrPr("username", snap.atStr))
-	n_schema.Add(snap.TStrTAttrPr("usertype", snap.atStr))
+	#n_schema.Add(snap.TStrTAttrPr("username", snap.atStr))
+	#n_schema.Add(snap.TStrTAttrPr("usertype", snap.atStr))
 
 	#define TTable objects of edges and nodes
 	edgetable = snap.TTable.LoadSS(e_schema, tempedgefile, context, ",", snap.TBool(True))
@@ -180,8 +217,8 @@ def buildReducedNet():
 
 	nodeattrv = snap.TStrV()
 	nodeattrv.Add("id")
-	nodeattrv.Add("username")
-	nodeattrv.Add("usertype")
+	#nodeattrv.Add("username")
+	#nodeattrv.Add("usertype")
 
 
 	#build SNAP network using the two TTable objects
@@ -190,10 +227,9 @@ def buildReducedNet():
 	return reduced_net
 
 networktype = sys.argv[1]
-testtype = sys.argv[2]
-domain = sys.argv[3]
+domain = sys.argv[2]
 
-outpath = '{}/{}-test/'.format(domain, testtype)
+outpath = '{}/random-test/test-network-features/'.format(domain)
 temppath = 'temp/'
 
 tempedgefile = temppath+'reduced_edges.csv'
@@ -213,6 +249,20 @@ if networktype == 'mention':
 	snap.SaveEdgeListNet(r_net, outpath+'m_network_reduced.csv', 'Reduced Mention Network - {}'.format(domain))
 	generateTables(outpath, outpath+'m_network_reduced.csv', r_net, 'm')
 	print 'Time needed: {} s'.format(time.time()-start)	
+    
+elif networktype == 'social':
+    network = snap.LoadEdgeListNet(outpath + 'social_network_1_complete.csv', '\t')
+    
+    start = time.time()
+	print 'Comolete social network reduction...'
+	print 'Starting |V|: {}'.format(network.GetNodes())
+	print 'Starting |E|: {}'.format(network.GetEdges())
+
+	reduceSocialNetwork(network, domain)
+	r_net = buildReducedNet()
+	snap.SaveEdgeListNet(r_net, outpath+'social_network_reduced.csv', 'Reduced Social Network - {}'.format(domain))
+	generateTables(outpath, outpath+'social_network_reduced.csv', r_net, 'social')
+	print 'Time needed: {} s'.format(time.time()-start)
 	
 elif networktype == 'tag':
 	fin = snap.TFIn(outpath+'h_network.bin')
