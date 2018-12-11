@@ -35,6 +35,9 @@ nometadata.columns = ['id_user']
 nodes = pd.concat([userdata, nometadata])
 nodes['followers'] = nodes.apply(lambda x: x['followers'] if not pd.isnull(x['followers']) else 1, axis=1)
 nodes['following'] = nodes.apply(lambda x: x['following'] if not pd.isnull(x['following']) else 1, axis=1)
+if domain == 'finance_20':
+	nodes['protected'] = False
+
 nodes.columns = header
 nodes.drop_duplicates(subset='id', inplace=True)
 nodes[['id','followers','following']].to_csv(outpath+relationship+'_network_nodes'+suffix+'.csv', index=None)

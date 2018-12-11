@@ -9,3 +9,6 @@
 
 #follower
 nohup ../../veles/examples/veles/veles -i:fashion/random-test/test-network-features/social_network_1_follower.edgelist -o:fashion/random-test/test-network-features/social_network_1_follower.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v &
+
+# follower + following
+nohup ../../veles/examples/veles/veles -i:fashion/random-test/test-network-features/social_network_1_complete.edgelist -o:fashion/random-test/test-network-features/social_network_1_complete.emb -d:8 -p:1 -q:0.5 -k:30 -l:20 -v &

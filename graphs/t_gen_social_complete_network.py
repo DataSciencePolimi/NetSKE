@@ -21,7 +21,7 @@ def generateTables(targetpath, netfile, net):
 			edges_file.write(line)
 		line_num = line_num + 1
 
-domain = sys.argv[2] # can be finance, finance_20,...
+domain = sys.argv[1] # can be finance, finance_20,...
 
 path = '{}/random-test/test-network-features/'.format(domain)
 
@@ -31,7 +31,7 @@ edgefile = 'temp/edges.csv'
 # merge followers of seeds and test 1
 allnodes = pd.DataFrame()
 alledges = pd.DataFrame()
-for relationship in ['followers', 'following']:
+for relationship in ['follower', 'following']:
     seed_f_nodes = pd.read_csv(path+relationship+'_network_nodes.csv')
     seed_f_edges = pd.read_csv(path+relationship+'_network_edges.csv')
     test_f_nodes = pd.read_csv('data-random/{}_network_nodes_1.csv'.format(relationship))
