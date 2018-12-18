@@ -1,0 +1,49 @@
+0 {'lamonicabuzz'}
+1 {'faulljonathan', 'ezraklein', 'reformedbroker'}
+2 {'faulljonathan', 'reformedbroker'}
+3 {'faulljonathan', 'eu_eurostat', 'ezraklein'}
+4 {'faulljonathan', 'lamonicabuzz'}
+5 {'faulljonathan', 'reformedbroker'}
+6 {'eu_eurostat', 'queen_europe'}
+7 {'firoozye'}
+8 {'faulljonathan', 'katie_martin_fx'}
+9 {'reformedbroker', 'lamonicabuzz'}
+10 {'lamonicabuzz'}
+11 {'faulljonathan', 'ezraklein'}
+12 {'ezraklein'}
+13 {'eu_eurostat', 'ezraklein', 'lamonicabuzz'}
+14 {'faulljonathan', 'reformedbroker'}
+15 {'faulljonathan', 'reformedbroker'}
+16 {'faulljonathan', 'ezraklein', 'lamonicabuzz', 'keithmccullough'}
+17 {'ezraklein', 'reformedbroker', 'lamonicabuzz'}
+18 {'faulljonathan'}
+19 {'eu_eurostat', 'reformedbroker'}
+20 {'faulljonathan', 'eu_eurostat', 'ezraklein'}
+21 {'faulljonathan', 'reformedbroker'}
+22 {'eu_eurostat', 'ezraklein', 'lamonicabuzz'}
+23 {'faulljonathan', 'eu_eurostat'}
+24 {'ezraklein', 'eu_eurostat', 'reformedbroker'}
+25 {'eu_eurostat', 'ezraklein', 'lamonicabuzz'}
+26 {'faulljonathan', 'ezraklein', 'lamonicabuzz'}
+27 {'eu_eurostat', 'lamonicabuzz'}
+28 {'faulljonathan', 'eu_eurostat', 'ezraklein', 'lamonicabuzz'}
+29 {'faulljonathan', 'howardlindzon', 'lamonicabuzz'}
+30 {'faulljonathan', 'lamonicabuzz'}
+31 {'faulljonathan', 'ezraklein', 'reformedbroker'}
+32 {'ezraklein', 'queen_europe'}
+34 {'faulljonathan', 'ezraklein', 'eu_eurostat', 'reformedbroker'}
+35 {'faulljonathan', 'eu_eurostat', 'ezraklein'}
+36 {'ezraklein', 'reformedbroker'}
+37 {'ezraklein', 'reformedbroker', 'lamonicabuzz', 'keithmccullough'}
+38 {'ezraklein', 'eu_eurostat', 'reformedbroker'}
+39 {'faulljonathan'}
+40 {'ezraklein', 'eu_eurostat', 'reformedbroker'}
+41 {'eu_eurostat', 'lamonicabuzz'}
+42 {'faulljonathan', 'eu_eurostat', 'lamonicabuzz'}
+43 {'faulljonathan', 'reformedbroker', 'lamonicabuzz'}
+44 {'ezraklein', 'reformedbroker', 'lamonicabuzz'}
+45 {'eu_eurostat', 'reformedbroker', 'lamonicabuzz'}
+46 {'lamonicabuzz'}
+47 {'faulljonathan', 'reformedbroker', 'queen_europe'}
+48 {'eu_eurostat', 'ezraklein', 'lamonicabuzz'}
+49 {'ezraklein'}
